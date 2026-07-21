@@ -17,6 +17,7 @@ for any git rev.
 
 - Git ≥ 2.31.0 (for Git support)
 - Mercurial ≥ 5.4.0 (for Mercurial support)
+- Sapling (for Sapling support)
 - Neovim ≥ 0.7.0 (with LuaJIT)
 - [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) (optional) For file icons
 
@@ -186,6 +187,7 @@ require("diffview").setup({
   enhanced_diff_hl = false, -- See |diffview-config-enhanced_diff_hl|
   git_cmd = { "git" },      -- The git executable followed by default args.
   hg_cmd = { "hg" },        -- The hg executable followed by default args.
+  sl_cmd = { "sl" },        -- The sl (Sapling) executable followed by default args.
   use_icons = true,         -- Requires nvim-web-devicons
   show_help_hints = true,   -- Show hints for how to open the help panel
   watch_index = true,       -- Update views and index buffers when the git index changes.
@@ -251,6 +253,10 @@ require("diffview").setup({
         },
       },
       hg = {
+        single_file = {},
+        multi_file = {},
+      },
+      sl = {
         single_file = {},
         multi_file = {},
       },

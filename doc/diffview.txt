@@ -367,6 +367,12 @@ COMMANDS                                        *diffview-commands*
         --exclude={pattern}
                 Exclude commits touching files as specified in the {pattern}.
 
+    Sapling Options: ~
+
+        Sapling accepts the same options as Mercurial listed above, with the
+        exception of `--branch` (Sapling has no named branches; use
+        `--bookmark` instead). Revsets use `sl help revsets`.
+
                                                 *:DiffviewClose*
 :DiffviewClose          Close the active Diffview.
 
@@ -430,6 +436,17 @@ hg_cmd                                          *diffview-config-hg_cmd*
 
         If your Mercurial install bundles the `chg` binary, this can be
         configured here to have a significant performance boost.
+
+sl_cmd                                          *diffview-config-sl_cmd*
+        Type: `string[]`, Default: `{ "sl" }`
+
+        This table forms the first part of all Sapling commands used
+        internally in the plugin. The first element should be the Sapling
+        binary. The subsequent elements are passed as arguments.
+
+        Sapling is a Mercurial derivative, so the Sapling adapter mirrors the
+        Mercurial one. Note that Sapling has no named branches (use bookmarks),
+        and line-range file history (`-L`) is not supported.
 
 view.x.layout                                   *diffview-config-view.x.layout*
         Type: >
