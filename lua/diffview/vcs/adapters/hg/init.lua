@@ -50,7 +50,10 @@ function HgAdapter.run_bootstrap()
   local function err(msg)
     if msg then
       bs.err = msg
-      logger:error("[HgAdapter] " .. bs.err)
+      -- A failed bootstrap just means this (optional) VCS tool is unavailable or
+      -- incompatible. Log at debug level so it doesn't spam users who don't use
+      -- this VCS; `:checkhealth diffview` surfaces `bs.err` for those who do.
+      logger:debug("[HgAdapter] " .. bs.err)
     end
   end
 
@@ -127,7 +130,10 @@ end
 ---@param path string
 ---@return string?
 local function get_toplevel(path)
-  local out, code = utils.job(utils.flatten({config.get_config().hg_cmd, {"root"}}), path)
+  -- A non-zero exit here just means `path` isn't inside a Mercurial repo, which
+  -- is an expected outcome while probing adapters. Run silently so the probe
+  -- doesn't spam the log with errors when opening a non-hg repo.
+  local out, code = utils.job(utils.flatten({config.get_config().hg_cmd, {"root"}}), { cwd = path, silent = true })
   if code ~= 0 then
     return nil
   end

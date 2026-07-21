@@ -90,7 +90,10 @@ function GitAdapter.run_bootstrap()
   local function err(msg)
     if msg then
       bs.err = msg
-      logger:error("[GitAdapter] " .. bs.err)
+      -- A failed bootstrap just means this (optional) VCS tool is unavailable or
+      -- incompatible. Log at debug level so it doesn't spam users who don't use
+      -- this VCS; `:checkhealth diffview` surfaces `bs.err` for those who do.
+      logger:debug("[GitAdapter] " .. bs.err)
     end
   end
 
@@ -170,10 +173,13 @@ end
 ---@param path string
 ---@return string?
 local function get_toplevel(path)
+  -- A non-zero exit here just means `path` isn't inside a git repo, which is an
+  -- expected outcome while probing adapters. Run silently so the probe doesn't
+  -- spam the log with errors when opening a non-git (e.g. Mercurial/Sapling) repo.
   local out, code = utils.job(utils.flatten({
     config.get_config().git_cmd,
     { "rev-parse", "--path-format=absolute", "--show-toplevel" },
-  }), path)
+  }), { cwd = path, silent = true })
   if code ~= 0 then
     return nil
   end
